@@ -20,18 +20,20 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="241dp">
 
             <ImageView
                 android:id="@+id/profile_user_logout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
+                android:layout_margin="10dp"
                 android:src="@drawable/baseline_logout_24"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.046" />
 
             <ImageView
                 android:id="@+id/profile_user_icon"
@@ -50,13 +52,13 @@
                 android:id="@+id/profile_user_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginHorizontal="20dp"
                 android:src="@drawable/baseline_edit_24"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintHorizontal_bias="0.986"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/profile_user_logout" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.087" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/profile_user_name_value"
@@ -143,7 +145,7 @@
                 app:layout_constraintVertical_bias="0.0" />
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/profile_contact_telf"
+                android:id="@+id/profile_contact_telf_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="30dp"
@@ -215,7 +217,7 @@
                 app:layout_constraintVertical_bias="0.0" />
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/profile_mail_telf"
+                android:id="@+id/profile_email_edit_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="30dp"
@@ -233,5 +235,16 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="p"
+        android:src="@drawable/baseline_refresh_24_white"
+        android:layout_marginBottom="75dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
