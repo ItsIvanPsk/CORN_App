@@ -3,12 +3,14 @@ package com.example.cornapp.view.payment;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cornapp.databinding.FragmentPaymentBinding;
@@ -16,16 +18,46 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.encoder.QRCode;
 
 public class PaymentFragment extends Fragment {
 
     private FragmentPaymentBinding binding;
+    private PaymentViewModel viewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentPaymentBinding.inflate(inflater, container, false);
-        binding.paymentQr.setImageBitmap(generateQRCode("prueba"));
+        viewModel = new ViewModelProvider(this).get(PaymentViewModel.class);
+        // binding.paymentQr.setImageBitmap(generateQRCode("prueba"));
+        setupListeners();
+        setupObservers();
         return binding.getRoot();
+    }
+    /*
+
+     */
+    public void setupListeners(){
+        binding.paymentSetupPayment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (binding.paymentAmountValue.getText().toString() == ""){
+                    Log.d("5cos", "Está vacio");
+                } else {
+                    Log.d("5cos", binding.paymentAmountValue.getText().toString());
+                    viewModel.setupPayment(binding.paymentAmountValue.getText().toString());
+                }
+            }
+        });
+    }
+
+    public void setupObservers() {
+        viewModel.getPaymentToken().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String token) {
+                binding.paymentQr.setImageBitmap(
+                        generateQRCode(token)
+                );
+            }
+        });
     }
 
     public Bitmap generateQRCode(String text) {
