@@ -1,4 +1,4 @@
-package com.example.cornapp.view.historial;
+package com.example.cornapp.presentation.historial;
 
 import androidx.lifecycle.ViewModel;
 

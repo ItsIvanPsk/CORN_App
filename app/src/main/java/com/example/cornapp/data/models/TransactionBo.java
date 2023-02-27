@@ -1,4 +1,4 @@
-package com.example.cornapp.view.scan;
+package com.example.cornapp.data.models;
 
 public class TransactionBo {
     private String message, user_id, token;

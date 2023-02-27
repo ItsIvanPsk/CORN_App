@@ -1,6 +1,7 @@
-package com.example.cornapp.view.profile;
+package com.example.cornapp.presentation.profile;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -9,6 +10,8 @@ import com.example.cornapp.data.models.ApiDto;
 import com.example.cornapp.domain.GetSyncUserUseCase;
 
 import org.json.JSONObject;
+
+import java.util.Map;
 
 public class ProfileViewModel extends ViewModel {
 
@@ -28,13 +31,18 @@ public class ProfileViewModel extends ViewModel {
             json.put("password", "");
             StringBuffer str = new GetSyncUserUseCase().updateUserStatus(json);
             JSONObject _json = new JSONObject(str.toString());
+            Log.d("5cos", _json.getString("code"));
+            Log.d("5cos", _json.getString("status"));
+            Log.d("5cos",  _json.getJSONObject("result").getString("message"));
+
             syncUp.setValue(
                     new ApiDto(
                             _json.get("status").toString(),
-                            200, // Integer.parseInt(_json.get("code").toString())
-                            new JSONObject() // _json.get("result").toString()
+                            Integer.parseInt(_json.getString("code")),
+                            _json.getJSONObject("result").getString("message")
                     )
             );
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

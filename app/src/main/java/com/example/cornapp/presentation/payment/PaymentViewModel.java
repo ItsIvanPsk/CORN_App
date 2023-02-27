@@ -1,4 +1,4 @@
-package com.example.cornapp.view.payment;
+package com.example.cornapp.presentation.payment;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

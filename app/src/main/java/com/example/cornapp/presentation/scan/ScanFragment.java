@@ -1,9 +1,10 @@
-package com.example.cornapp.view.scan;
+package com.example.cornapp.presentation.scan;
 
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.DecodeCallback;
+import com.example.cornapp.data.models.ApiDto;
+import com.example.cornapp.data.models.TransactionBo;
 import com.example.cornapp.databinding.FragmentScanBinding;
 import com.google.zxing.Result;
 
@@ -59,17 +62,12 @@ public class ScanFragment extends Fragment {
 
         requestPermission();
         if (hasCameraPermission()) {
-            mCodeScanner.setDecodeCallback(new DecodeCallback() {
-                @Override
-                public void onDecoded(@NonNull final Result result) {
-                    getActivity().runOnUiThread(
-                            () -> {
-                                Toast.makeText(getActivity(), result.getText(), Toast.LENGTH_SHORT).show();
-                                viewModel.startPayment(result.getText());
-                            }
-                    );
-                }
-            });
+            mCodeScanner.setDecodeCallback(result -> getActivity().runOnUiThread(
+                    () -> {
+                        Toast.makeText(getActivity(), result.getText(), Toast.LENGTH_SHORT).show();
+                        viewModel.startPayment(result.getText());
+                    }
+            ));
             binding.scannerView.setOnClickListener(view -> mCodeScanner.startPreview());
         }
         setupObservers();
@@ -94,12 +92,27 @@ public class ScanFragment extends Fragment {
             @Override
             public void onChanged(TransactionBo transaction) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage("Vas a pagar la cantidad de " + String.valueOf(transaction.getAmount()) + " CORN");
+                builder.setMessage("Vas a pagar la cantidad de " + transaction.getAmount() + " CORN");
                 builder.setPositiveButton("Pay", (dialog, id) -> {
+                    Log.d("5cos", String.valueOf(transaction.getAmount()));
+                    Log.d("5cos", String.valueOf(transaction.getUserId()));
+                    Log.d("5cos", String.valueOf(transaction.getMessage()));
                     viewModel.finishPayment(true, transaction);
                 });
                 builder.setNegativeButton("Cancel", (dialog, id) -> {
                     viewModel.finishPayment(false, transaction);
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+
+        viewModel.getTransactionResult().observe(this, new Observer<ApiDto>() {
+            @Override
+            public void onChanged(ApiDto apiDto) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage(apiDto.getResult());
+                builder.setPositiveButton("Okay", (dialog, id) -> {
                 });
                 AlertDialog dialog = builder.create();
                 dialog.show();

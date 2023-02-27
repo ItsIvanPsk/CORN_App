@@ -1,4 +1,4 @@
-package com.example.cornapp.view.historial;
+package com.example.cornapp.presentation.main;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,16 +7,15 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
-import com.example.cornapp.databinding.FragmentHistorialBinding;
+import com.example.cornapp.databinding.FragmentHomeBinding;
 
-public class HistorialFragment extends Fragment {
+public class HomeFragment extends Fragment {
 
-    private FragmentHistorialBinding binding;
+    private FragmentHomeBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentHistorialBinding.inflate(inflater, container, false);
+        binding = FragmentHomeBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 

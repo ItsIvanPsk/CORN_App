@@ -3,11 +3,10 @@ package com.example.cornapp.data.models;
 import org.json.JSONObject;
 
 public class ApiDto {
-    private String status = "";
+    private String status = "", result = "";
     private int code = 0;
-    private JSONObject result;
 
-    public ApiDto(String status, int code, JSONObject result) {
+    public ApiDto(String status, int code, String result) {
         this.status = status;
         this.code = code;
         this.result = result;
@@ -21,7 +20,7 @@ public class ApiDto {
         return code;
     }
 
-    public JSONObject getResult() {
+    public String getResult() {
         return result;
     }
 

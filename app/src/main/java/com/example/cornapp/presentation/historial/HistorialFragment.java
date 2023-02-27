@@ -1,23 +1,21 @@
-package com.example.cornapp.view.main;
+package com.example.cornapp.presentation.historial;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
-import com.example.cornapp.databinding.FragmentHomeBinding;
+import com.example.cornapp.databinding.FragmentHistorialBinding;
 
-public class HomeFragment extends Fragment {
+public class HistorialFragment extends Fragment {
 
-    private FragmentHomeBinding binding;
+    private FragmentHistorialBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        binding = FragmentHistorialBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 

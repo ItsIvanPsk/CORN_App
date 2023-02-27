@@ -1,4 +1,4 @@
-package com.example.cornapp.view.payment;
+package com.example.cornapp.presentation.payment;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -27,37 +27,28 @@ public class PaymentFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentPaymentBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(this).get(PaymentViewModel.class);
-        // binding.paymentQr.setImageBitmap(generateQRCode("prueba"));
         setupListeners();
         setupObservers();
         return binding.getRoot();
     }
-    /*
 
-     */
     public void setupListeners(){
-        binding.paymentSetupPayment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (binding.paymentAmountValue.getText().toString() == ""){
-                    Log.d("5cos", "Está vacio");
-                } else {
-                    Log.d("5cos", binding.paymentAmountValue.getText().toString());
-                    viewModel.setupPayment(binding.paymentAmountValue.getText().toString());
-                }
+        binding.paymentSetupPayment.setOnClickListener(view -> {
+            if (binding.paymentAmountValue.getText().toString().equals("")){
+                Log.d("5cos", "Está vacio");
+            } else {
+                Log.d("5cos", binding.paymentAmountValue.getText().toString());
+                viewModel.setupPayment(binding.paymentAmountValue.getText().toString());
             }
         });
     }
 
     public void setupObservers() {
-        viewModel.getPaymentToken().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String token) {
+        viewModel.getPaymentToken().observe(this, token ->
                 binding.paymentQr.setImageBitmap(
-                        generateQRCode(token)
-                );
-            }
-        });
+                    generateQRCode(token)
+                )
+        );
     }
 
     public Bitmap generateQRCode(String text) {
@@ -80,6 +71,5 @@ public class PaymentFragment extends Fragment {
         bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
         return bitmap;
     }
-
 
 }
