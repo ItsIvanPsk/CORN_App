@@ -109,6 +109,7 @@ public class ScanFragment extends Fragment {
 
         viewModel.getTransactionResult().observe(this, apiDto -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Transaction");
             builder.setMessage(apiDto.getResult());
             builder.setPositiveButton("Okay", (dialog, id) -> {
                 dialog.dismiss();
