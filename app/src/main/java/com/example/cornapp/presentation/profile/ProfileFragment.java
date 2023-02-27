@@ -1,4 +1,4 @@
-package com.example.cornapp.view.profile;
+package com.example.cornapp.presentation.profile;
 
 import android.app.AlertDialog;
 import android.os.Bundle;

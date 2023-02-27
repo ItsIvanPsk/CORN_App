@@ -41,7 +41,7 @@
         tools:layout="@layout/fragment_scan"/>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.cornapp.view.profile.ProfileFragment"
+        android:name="com.example.cornapp.presentation.profile.ProfileFragment"
         android:label="fragment_dashboard"
         tools:layout="@layout/fragment_profile" />
     <fragment

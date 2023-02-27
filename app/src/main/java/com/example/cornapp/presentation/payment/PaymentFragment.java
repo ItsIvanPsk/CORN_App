@@ -1,5 +1,6 @@
 package com.example.cornapp.presentation.payment;
 
+import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,7 +11,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cornapp.databinding.FragmentPaymentBinding;
@@ -36,6 +36,12 @@ public class PaymentFragment extends Fragment {
         binding.paymentSetupPayment.setOnClickListener(view -> {
             if (binding.paymentAmountValue.getText().toString().equals("")){
                 Log.d("5cos", "Está vacio");
+                showDialog(
+                        "Invalid amount",
+                        "You have entered a incorrect value on the amount field.\nPlease try again.",
+                        "Okay",
+                        ""
+                );
             } else {
                 Log.d("5cos", binding.paymentAmountValue.getText().toString());
                 viewModel.setupPayment(binding.paymentAmountValue.getText().toString());
@@ -70,6 +76,13 @@ public class PaymentFragment extends Fragment {
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
         return bitmap;
+    }
+
+    private void showDialog(String title, String message, String firstOpt, String secondOpt) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setPositiveButton(firstOpt, (dialog, id) -> dialog.dismiss());
     }
 
 }

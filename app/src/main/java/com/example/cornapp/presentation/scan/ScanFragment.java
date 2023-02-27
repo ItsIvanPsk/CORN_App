@@ -107,16 +107,14 @@ public class ScanFragment extends Fragment {
             }
         });
 
-        viewModel.getTransactionResult().observe(this, new Observer<ApiDto>() {
-            @Override
-            public void onChanged(ApiDto apiDto) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage(apiDto.getResult());
-                builder.setPositiveButton("Okay", (dialog, id) -> {
-                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
+        viewModel.getTransactionResult().observe(this, apiDto -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(apiDto.getResult());
+            builder.setPositiveButton("Okay", (dialog, id) -> {
+                dialog.dismiss();
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
         });
 
     }
