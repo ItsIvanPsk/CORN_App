@@ -11,6 +11,8 @@ public class UserBo {
         this.phone = _phone;
     }
 
+    public UserBo(){  }
+
     public String getName() {
         return name;
     }

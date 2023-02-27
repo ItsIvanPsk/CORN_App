@@ -65,7 +65,7 @@ public class ScanFragment extends Fragment {
             mCodeScanner.setDecodeCallback(result -> getActivity().runOnUiThread(
                     () -> {
                         Toast.makeText(getActivity(), result.getText(), Toast.LENGTH_SHORT).show();
-                        viewModel.startPayment(result.getText());
+                        viewModel.startPayment(result.getText(), requireContext());
                     }
             ));
             binding.scannerView.setOnClickListener(view -> mCodeScanner.startPreview());
@@ -109,6 +109,7 @@ public class ScanFragment extends Fragment {
 
         viewModel.getTransactionResult().observe(this, apiDto -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Transaction");
             builder.setMessage(apiDto.getResult());
             builder.setPositiveButton("Okay", (dialog, id) -> {
                 dialog.dismiss();

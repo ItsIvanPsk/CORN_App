@@ -44,13 +44,13 @@ public class PaymentFragment extends Fragment {
                 );
             } else {
                 Log.d("5cos", binding.paymentAmountValue.getText().toString());
-                viewModel.setupPayment(binding.paymentAmountValue.getText().toString());
+                viewModel.setupPayment(binding.paymentAmountValue.getText().toString(), requireContext());
             }
         });
     }
 
     public void setupObservers() {
-        viewModel.getPaymentToken().observe(this, token ->
+        viewModel.getPaymentToken().observe(getViewLifecycleOwner(), token ->
                 binding.paymentQr.setImageBitmap(
                     generateQRCode(token)
                 )
