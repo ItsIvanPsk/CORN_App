@@ -22,11 +22,10 @@ public class ScanViewModel extends ViewModel {
 
     private final MutableLiveData<TransactionBo> transaction = new MutableLiveData<>();
     private final MutableLiveData<ApiDto> apiResult = new MutableLiveData<>();
-    private LiveData<TransactionBo> transactionResult;
 
     public void startPayment(String token, Context context) {
         JSONObject json = new JSONObject();
-        ArrayList<String> userData = JsonUtils.readDataFromFile(context, "user.json");
+        ArrayList<String> userData = JsonUtils.readDataFromFile(context, "users.json");
         Log.d("5cos", userData.get(2));
         try {
             json.put("user_id", userData.get(2));

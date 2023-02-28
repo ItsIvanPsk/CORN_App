@@ -22,8 +22,8 @@ public class PaymentViewModel extends ViewModel {
 
     public void setupPayment(String amount, Context context) {
         JSONObject json = new JSONObject();
-        ArrayList<String> userData = JsonUtils.readDataFromFile(context, "user.json");
-        Log.d("5cos", userData.get(2).toString());
+        ArrayList<String> userData = JsonUtils.readDataFromFile(context, "users.json");
+        Log.d("5cos", userData.get(2));
         try {
             json.put("user_id", userData.get(2));
             json.put("amount", amount);

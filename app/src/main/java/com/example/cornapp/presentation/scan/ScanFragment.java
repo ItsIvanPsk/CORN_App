@@ -23,7 +23,11 @@ import com.budiyev.android.codescanner.DecodeCallback;
 import com.example.cornapp.data.models.ApiDto;
 import com.example.cornapp.data.models.TransactionBo;
 import com.example.cornapp.databinding.FragmentScanBinding;
+import com.example.cornapp.utils.JsonUtils;
 import com.google.zxing.Result;
+
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class ScanFragment extends Fragment {
     private CodeScanner mCodeScanner;
@@ -65,7 +69,17 @@ public class ScanFragment extends Fragment {
             mCodeScanner.setDecodeCallback(result -> getActivity().runOnUiThread(
                     () -> {
                         Toast.makeText(getActivity(), result.getText(), Toast.LENGTH_SHORT).show();
-                        viewModel.startPayment(result.getText(), requireContext());
+                        ArrayList<String> userData = JsonUtils.readDataFromFile(requireContext(), "users.json");
+                        if (userData.size() == 0) {
+                            showDialog(
+                                    "Payment error",
+                                    "You do not have a user. Payment stopped!",
+                                    "Okay",
+                                    ""
+                            );
+                        } else {
+                            viewModel.startPayment(result.getText(), requireContext());
+                        }
                     }
             ));
             binding.scannerView.setOnClickListener(view -> mCodeScanner.startPreview());
@@ -118,6 +132,18 @@ public class ScanFragment extends Fragment {
             dialog.show();
         });
 
+    }
+
+    private void showDialog(String title, String message, String firstOpt, String secondOpt) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        if (!Objects.equals(title, "")) {
+            builder.setTitle(title);
+        } else { builder.setTitle("CORN App"); }
+        if (!Objects.equals(message, "")) {
+            builder.setMessage(message);
+        } else { builder.setTitle(""); }
+        builder.setPositiveButton(firstOpt, (dialog, id) -> dialog.dismiss());
+        builder.create().show();
     }
 
 }

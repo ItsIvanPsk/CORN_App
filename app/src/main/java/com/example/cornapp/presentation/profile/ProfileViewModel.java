@@ -32,7 +32,7 @@ public class ProfileViewModel extends ViewModel {
             json.put("name", _name);
             json.put("surname", _surname);
             json.put("email", _email);
-            json.put("password", "");
+            json.put("password", "P@ssw0rd");
             StringBuffer str = new GetSyncUserUseCase().updateUserStatus(json);
             JSONObject _json = new JSONObject(str.toString());
             Log.d("5cos", _json.getString("code"));
@@ -52,7 +52,7 @@ public class ProfileViewModel extends ViewModel {
             dataList.add(_surname);
             dataList.add(_phone);
             dataList.add(_email);
-            JsonUtils.saveDataToFile(context, "user.json", dataList);
+            JsonUtils.saveDataToFile(context, "users.json", dataList);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -61,15 +61,17 @@ public class ProfileViewModel extends ViewModel {
     }
 
     public void readUser(Context context) {
-        ArrayList<String> retrievedDataList = JsonUtils.readDataFromFile(context, "user.json");
+        ArrayList<String> retrievedDataList = JsonUtils.readDataFromFile(context, "users.json");
         UserBo user = new UserBo();
         Log.d("5cos", retrievedDataList.toString());
         if (retrievedDataList.size() != 0) {
-            user.setName(retrievedDataList.get(0));
-            user.setSurname(retrievedDataList.get(1));
-            user.setPhone(Integer.parseInt(retrievedDataList.get(2)));
-            user.setEmail(retrievedDataList.get(3));
-            userJson.setValue(user);
+            if (retrievedDataList.get(0).length() != 0) {
+                user.setName(retrievedDataList.get(0));
+                user.setSurname(retrievedDataList.get(1));
+                user.setPhone(Integer.parseInt(retrievedDataList.get(2)));
+                user.setEmail(retrievedDataList.get(3));
+                userJson.setValue(user);
+            }
         }
     }
 

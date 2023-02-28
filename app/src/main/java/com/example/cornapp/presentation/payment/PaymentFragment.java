@@ -39,7 +39,7 @@ public class PaymentFragment extends Fragment {
 
     public void setupListeners(){
         binding.paymentSetupPayment.setOnClickListener(view -> {
-            ArrayList<String> userData = JsonUtils.readDataFromFile(requireContext(), "user.json");
+            ArrayList<String> userData = JsonUtils.readDataFromFile(requireContext(), "users.json");
             if (binding.paymentAmountValue.getText().toString().equals("")){
                 showDialog(
                         "Invalid amount",
@@ -98,6 +98,7 @@ public class PaymentFragment extends Fragment {
             builder.setMessage(message);
         } else { builder.setTitle(""); }
         builder.setPositiveButton(firstOpt, (dialog, id) -> dialog.dismiss());
+        builder.create().show();
     }
 
     private void confirmPayment(String title, String message, String firstOpt, String secondOpt) {
@@ -110,6 +111,8 @@ public class PaymentFragment extends Fragment {
             Toast.makeText(requireContext(), "Se ha cancelado el pago", Toast.LENGTH_SHORT).show();
             binding.paymentAmountValue.setText("");
         });
+        builder.create().show();
     }
+
 
 }
