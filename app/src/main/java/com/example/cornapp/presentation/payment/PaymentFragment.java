@@ -8,16 +8,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cornapp.databinding.FragmentPaymentBinding;
+import com.example.cornapp.utils.JsonUtils;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class PaymentFragment extends Fragment {
 
@@ -34,23 +39,29 @@ public class PaymentFragment extends Fragment {
 
     public void setupListeners(){
         binding.paymentSetupPayment.setOnClickListener(view -> {
+            ArrayList<String> userData = JsonUtils.readDataFromFile(requireContext(), "user.json");
             if (binding.paymentAmountValue.getText().toString().equals("")){
-                Log.d("5cos", "Está vacio");
                 showDialog(
                         "Invalid amount",
                         "You have entered a incorrect value on the amount field.\nPlease try again.",
                         "Okay",
                         ""
                 );
+            } else if (userData.get(2) == null || Objects.equals(userData.get(2), "")) {
+                showDialog(
+                        "Invalid amount",
+                        "You do not have a user on the app, please go to the profile and sign up.\nPlease try again.",
+                        "Okay",
+                        ""
+                );
             } else {
-                Log.d("5cos", binding.paymentAmountValue.getText().toString());
-                viewModel.setupPayment(binding.paymentAmountValue.getText().toString());
+                confirmPayment("Payment", "Do you wanna setup the transaction for " + binding.paymentAmountValue.getText().toString() + " CORNs?", "Yes", "No");
             }
         });
     }
 
     public void setupObservers() {
-        viewModel.getPaymentToken().observe(this, token ->
+        viewModel.getPaymentToken().observe(getViewLifecycleOwner(), token ->
                 binding.paymentQr.setImageBitmap(
                     generateQRCode(token)
                 )
@@ -80,9 +91,25 @@ public class PaymentFragment extends Fragment {
 
     private void showDialog(String title, String message, String firstOpt, String secondOpt) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        if (!Objects.equals(title, "")) {
+            builder.setTitle(title);
+        } else { builder.setTitle("CORN App"); }
+        if (!Objects.equals(message, "")) {
+            builder.setMessage(message);
+        } else { builder.setTitle(""); }
+        builder.setPositiveButton(firstOpt, (dialog, id) -> dialog.dismiss());
+    }
+
+    private void confirmPayment(String title, String message, String firstOpt, String secondOpt) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(title);
         builder.setMessage(message);
-        builder.setPositiveButton(firstOpt, (dialog, id) -> dialog.dismiss());
+        builder.setPositiveButton(firstOpt, (dialog, id) -> viewModel.setupPayment(binding.paymentAmountValue.getText().toString(), requireContext()));
+        builder.setNegativeButton(secondOpt, (dialog, id) -> {
+            dialog.dismiss();
+            Toast.makeText(requireContext(), "Se ha cancelado el pago", Toast.LENGTH_SHORT).show();
+            binding.paymentAmountValue.setText("");
+        });
     }
 
 }

@@ -3,19 +3,23 @@ package com.example.cornapp.presentation.profile;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.cornapp.data.models.ApiDto;
+import com.example.cornapp.data.models.UserBo;
 import com.example.cornapp.domain.GetSyncUserUseCase;
+import com.example.cornapp.utils.JsonUtils;
 
 import org.json.JSONObject;
 
-import java.util.Map;
+import java.util.ArrayList;
 
 public class ProfileViewModel extends ViewModel {
 
     private MutableLiveData<ApiDto> syncUp = new MutableLiveData<>();
+    private MutableLiveData<UserBo> userJson = new MutableLiveData<>();
 
     public MutableLiveData<ApiDto> syncUser(){
         return syncUp;
@@ -43,9 +47,34 @@ public class ProfileViewModel extends ViewModel {
                     )
             );
 
+            ArrayList<String> dataList = new ArrayList<>();
+            dataList.add(_name);
+            dataList.add(_surname);
+            dataList.add(_phone);
+            dataList.add(_email);
+            JsonUtils.saveDataToFile(context, "user.json", dataList);
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
     }
+
+    public void readUser(Context context) {
+        ArrayList<String> retrievedDataList = JsonUtils.readDataFromFile(context, "user.json");
+        UserBo user = new UserBo();
+        Log.d("5cos", retrievedDataList.toString());
+        if (retrievedDataList.size() != 0) {
+            user.setName(retrievedDataList.get(0));
+            user.setSurname(retrievedDataList.get(1));
+            user.setPhone(Integer.parseInt(retrievedDataList.get(2)));
+            user.setEmail(retrievedDataList.get(3));
+            userJson.setValue(user);
+        }
+    }
+
+    public LiveData<UserBo> getReadedUser() {
+        return userJson;
+    }
+
 }

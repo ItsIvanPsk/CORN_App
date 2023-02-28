@@ -2,11 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/homeFragment"
-        android:icon="@drawable/ic_home_black_24dp"
-        android:title="Home" />
-
-    <item
         android:id="@+id/historialFragment"
         android:icon="@drawable/baseline_history_24"
         android:title="Historial" />
@@ -15,6 +10,11 @@
         android:id="@+id/paymentFragment"
         android:icon="@drawable/baseline_payments_24"
         android:title="Payment" />
+
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="Home" />
 
     <item
         android:id="@+id/profileFragment"

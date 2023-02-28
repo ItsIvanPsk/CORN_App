@@ -1,5 +1,6 @@
 package com.example.cornapp.presentation.scan;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -10,9 +11,12 @@ import com.example.cornapp.data.models.ApiDto;
 import com.example.cornapp.data.models.TransactionBo;
 import com.example.cornapp.domain.FinishPaymentUseCase;
 import com.example.cornapp.domain.StartPaymentUseCase;
+import com.example.cornapp.utils.JsonUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class ScanViewModel extends ViewModel {
 
@@ -20,26 +24,23 @@ public class ScanViewModel extends ViewModel {
     private final MutableLiveData<ApiDto> apiResult = new MutableLiveData<>();
     private LiveData<TransactionBo> transactionResult;
 
-    public void startPayment(String token) {
+    public void startPayment(String token, Context context) {
         JSONObject json = new JSONObject();
-        String user_id = "999 99 99 99";
+        ArrayList<String> userData = JsonUtils.readDataFromFile(context, "user.json");
+        Log.d("5cos", userData.get(2));
         try {
-            json.put("user_id", user_id);
+            json.put("user_id", userData.get(2));
             json.put("transaction_token", token);
-            Log.d("5cos", token);
             StringBuffer str = new StartPaymentUseCase().startPayment(json);
-            Log.d("5cos", str.toString());
             JSONObject response = new JSONObject(str.toString());
-            Log.d("5cos", response.toString());
             if (response.getString("status").equals("OK")){
                 JSONObject result = new JSONObject(response.getString("result"));
                 JSONObject res = new JSONObject(result.toString());
                 JSONObject res2 = new JSONObject(res.toString());
-                Log.d("5cos", "AQUI -> " + res2.getString("amount"));
                 transaction.setValue(
                         new TransactionBo(
                                 result.getString("message"),
-                                user_id,
+                                userData.get(2),
                                 token,
                                 Integer.parseInt(res2.getString("amount"))
                         )
@@ -56,13 +57,14 @@ public class ScanViewModel extends ViewModel {
         JSONObject json = new JSONObject();
         try {
             Log.d("5cos", "Enter finish payment");
+            Log.d("5cos", "HERE" + transaction.getUserId());
             json.put("user_id", transaction.getUserId());
             json.put("transaction_token", transaction.getTransactionToken());
             json.put("accept", accept);
             json.put("amount", transaction.getAmount());
             StringBuffer str = new FinishPaymentUseCase().finishPayment(json);
-            JSONObject res = new JSONObject(str.toString());
             Log.d("5cos", str.toString());
+            JSONObject res = new JSONObject(str.toString());
             apiResult.setValue(
                     new ApiDto(
                             res.getString("status"),
@@ -70,6 +72,7 @@ public class ScanViewModel extends ViewModel {
                             res.getJSONObject("result").getString("message")
                     )
             );
+
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }

@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -23,11 +24,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setupNavController();
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
 
     }
 
     private void setupNavController(){
-        BottomNavigationView navView = findViewById(R.id.nav_view);
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.homeFragment,
                 R.id.historialFragment,

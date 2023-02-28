@@ -14,14 +14,15 @@ import com.example.cornapp.data.models.UserBo;
 import com.example.cornapp.databinding.FragmentProfileBinding;
 import com.example.cornapp.presentation.ApplicationViewModel;
 import com.example.cornapp.presentation.profile.ProfileViewModel;
+import com.example.cornapp.utils.JsonUtils;
+
+import java.util.ArrayList;
 
 public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
     private ProfileViewModel viewModel;
     private ApplicationViewModel appViewModel;
-
-    private UserBo _user = new UserBo("", "", "", 999999999);
 
     private boolean userEditing = false;
     private boolean contactEditing = false;
@@ -31,6 +32,7 @@ public class ProfileFragment extends Fragment {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
         appViewModel = new ViewModelProvider(this).get(ApplicationViewModel.class);
+        viewModel.readUser(requireContext());
         setupProfileUI();
         setupListeners();
         setupObservers();
@@ -52,11 +54,11 @@ public class ProfileFragment extends Fragment {
         });
         binding.profileContactEdit.setOnClickListener(view -> {
             contactEditing = !contactEditing;
-            binding.profileContactTelfValue.setEnabled(userEditing);
+            binding.profileContactTelfValue.setEnabled(contactEditing);
         });
         binding.profileEmailCardview.setOnClickListener(view -> {
             emailEditing = !emailEditing;
-            binding.profileEmailEditValue.setEnabled(userEditing);
+            binding.profileEmailEditValue.setEnabled(emailEditing);
         });
         binding.fab.setOnClickListener(view -> {
             viewModel.updateUser(
@@ -67,15 +69,21 @@ public class ProfileFragment extends Fragment {
                     getContext()
             );
         });
+        binding.profileUserLogout.setOnClickListener(view -> {
+            JsonUtils.saveDataToFile(requireContext(), "users.json", new ArrayList<>());
+        });
     }
 
     public void setupObservers() {
-        viewModel.syncUser().observe(this, apiDto -> {
+        viewModel.syncUser().observe(getViewLifecycleOwner(), apiDto -> {
             AlertDialog alertDialog = showDialog(apiDto.getCode(), apiDto.getStatus(), apiDto.getResult());
             alertDialog.show();
-            if (apiDto.getCode() == 200) {
-                appViewModel.setupUser(_user);
-            }
+        });
+        viewModel.getReadedUser().observe(getViewLifecycleOwner(), UserBo -> {
+            binding.profileUserNameValue.setText(UserBo.getName());
+            binding.profileUserSurnameValue.setText(UserBo.getSurname());
+            binding.profileContactTelfValue.setText(String.valueOf(UserBo.getPhone()));
+            binding.profileEmailEditValue.setText(UserBo.getEmail());
         });
     }
 
