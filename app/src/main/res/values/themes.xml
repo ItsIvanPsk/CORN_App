@@ -1,11 +1,10 @@
 <resources>
     <style name="Theme.CornApp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="colorPrimary">#8458b3</item>
-        <item name="colorPrimaryVariant">#A0D2EB</item>
-        <item name="colorOnPrimary">#494D5F</item>
-        <item name="colorSecondary">#D0BDF4</item>
-        <item name="colorSecondaryVariant">#E5EAF5</item>
-        <item name="colorOnSecondary">#E5EAF5</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
+        <item name="colorOnPrimary">@color/colorPrimary</item>
+        <item name="colorSecondary">@color/cerulean</item>
+        <item name="colorSecondaryVariant">@color/cerulean_two</item>
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
     </style>
 </resources>
