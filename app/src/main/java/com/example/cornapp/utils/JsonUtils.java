@@ -16,24 +16,15 @@ import java.util.ArrayList;
 
 
 public class JsonUtils {
-
-    // Function to save data to a JSON file on private storage
     public static void saveDataToFile(Context context, String fileName, ArrayList<String> dataList) {
         try {
-            // Create a new JSON array
             JSONArray jsonArray = new JSONArray();
-
-            // Add each string in the dataList to the JSON array
             for (String data : dataList) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("data", data);
                 jsonArray.put(jsonObject);
             }
-
-            // Convert the JSON array to a string
             String jsonString = jsonArray.toString();
-
-            // Save the JSON string to a file on private storage
             FileOutputStream fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
             fileOutputStream.write(jsonString.getBytes());
             fileOutputStream.close();
@@ -42,11 +33,9 @@ public class JsonUtils {
         }
     }
 
-    // Function to read data from a JSON file on private storage
     public static ArrayList<String> readDataFromFile(Context context, String fileName) {
         ArrayList<String> dataList = new ArrayList<>();
         try {
-            // Open the file and read its contents into a StringBuilder
             FileInputStream fileInputStream = context.openFileInput(fileName);
             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
@@ -54,12 +43,9 @@ public class JsonUtils {
             String line = bufferedReader.readLine();
             while (line != null) {
                 stringBuilder.append(line).append("\n");
-                Log.d("5cos", line.toString());
                 line = bufferedReader.readLine();
             }
             bufferedReader.close();
-
-            // Parse the JSON string and extract the data values
             String jsonString = stringBuilder.toString();
             JSONArray jsonArray = new JSONArray(jsonString);
             for (int i = 0; i < jsonArray.length(); i++) {

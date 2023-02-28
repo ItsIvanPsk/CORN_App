@@ -55,14 +55,11 @@ public class ScanViewModel extends ViewModel {
     public void finishPayment(Boolean accept, TransactionBo transaction) {
         JSONObject json = new JSONObject();
         try {
-            Log.d("5cos", "Enter finish payment");
-            Log.d("5cos", "HERE" + transaction.getUserId());
             json.put("user_id", transaction.getUserId());
             json.put("transaction_token", transaction.getTransactionToken());
             json.put("accept", accept);
             json.put("amount", transaction.getAmount());
             StringBuffer str = new FinishPaymentUseCase().finishPayment(json);
-            Log.d("5cos", str.toString());
             JSONObject res = new JSONObject(str.toString());
             apiResult.setValue(
                     new ApiDto(

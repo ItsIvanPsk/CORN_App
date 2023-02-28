@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Corn App</string>
+    <string name="historic_transacion_title">Historic de transacions</string>
 </resources>
