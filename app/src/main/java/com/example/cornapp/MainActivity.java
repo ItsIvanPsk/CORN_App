@@ -1,6 +1,7 @@
 package com.example.cornapp;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -10,6 +11,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.viewbinding.ViewBinding;
 
 import com.example.cornapp.databinding.ActivityMainBinding;
 
@@ -27,7 +29,10 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
+    }
 
+    public ViewBinding getBinding(){
+        return this.binding;
     }
 
     private void setupNavController(){
