@@ -1,5 +1,7 @@
 package com.example.cornapp.presentation.historial;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,7 +38,9 @@ public class HistorialFragment extends Fragment {
         setupListeners();
         setupObservers();
 
-        viewModel.updateUserTransactions(requireContext(), PersistanceUtils.session_token);
+        SharedPreferences sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE);
+        String st = sharedPref.getString("session_token", "");
+        viewModel.updateUserTransactions(requireContext(), st);
 
         return binding.getRoot();
     }
@@ -51,7 +55,7 @@ public class HistorialFragment extends Fragment {
         binding.historialRecycler.setAdapter(adapter);
     }
     private void setupObservers() {
-        viewModel.getUserTransactions().observe(this, transaction -> {
+        viewModel.getUserTransactions().observe(getViewLifecycleOwner(), transaction -> {
             Log.d("5cos", transaction.toString());
             adapter = new TransactionsAdapter(requireContext(), transaction);
             binding.historialRecycler.setAdapter(adapter);

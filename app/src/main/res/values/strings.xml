@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Corn App</string>
     <string name="historic_transacion_title">Historic de transacions</string>
+    <string name="password">Password</string>
+    <string name="create_user">Create user</string>
+    <string name="phone">Phone</string>
 </resources>

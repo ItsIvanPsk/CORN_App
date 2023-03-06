@@ -1,22 +1,21 @@
 package com.example.cornapp.presentation.login;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 
-import com.example.cornapp.LoginActivity;
 import com.example.cornapp.MainActivity;
-import com.example.cornapp.R;
 import com.example.cornapp.SignUpActivity;
-import com.example.cornapp.databinding.ActivityMainBinding;
 import com.example.cornapp.databinding.FragmentLoginBinding;
 import com.example.cornapp.utils.PersistanceUtils;
 
@@ -35,6 +34,10 @@ public class LoginFragment extends Fragment {
         setupListeners();
         setupObservers();
 
+        SharedPreferences sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE);
+        String st = sharedPref.getString("session_token", "");
+        viewModel.tryAutoLogin(st);
+        Log.d("5cos", st);
 
         return binding.getRoot();
     }
@@ -61,21 +64,16 @@ public class LoginFragment extends Fragment {
     }
 
     private void setupObservers() {
-        viewModel.getLoginInfo().observe(getViewLifecycleOwner(), msg -> {
-            Log.d("5cos", msg);
-        });
         viewModel.getLoginResult().observe(getViewLifecycleOwner(), result -> {
-            Log.d("5cos", result.toString());
             if (result.getCode() == 200) {
-                try {
-                    Intent intent = new Intent(getActivity(), MainActivity.class);
-                    JSONObject json = new JSONObject(result.getResult());
-                    PersistanceUtils.session_token = json.get("session_token").toString();
-                    Log.d("5cos", "Persitoken: " + PersistanceUtils.session_token);
-                    startActivity(intent);
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
+                PersistanceUtils.session_token = result.getResult();
+                SharedPreferences sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.remove("session_token");
+                editor.putString("session_token", result.getResult());
+                editor.apply();
+                Toast.makeText(requireContext(), "Auto login succesfull!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getActivity(), MainActivity.class));
             }
         });
     }
