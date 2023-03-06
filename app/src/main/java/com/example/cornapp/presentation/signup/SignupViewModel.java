@@ -25,9 +25,14 @@ public class SignupViewModel extends ViewModel {
 
     public void createUser(String name, String surname, String email, String phone, String password) {
         if (name.equals("") | surname.equals("") | email.equals("") | phone.equals("") | password.equals("") ) {
-            Log.d("5cos", "Invalid");
+            creationStatus.setValue(
+                    new ApiDto(
+                            "Error",
+                            400,
+                            "El formulari no es válid."
+                    )
+            );
         } else {
-            Log.d("5cos", "Valid");
             try {
                 JSONObject json = new JSONObject();
                 json.put("name", name);
@@ -37,6 +42,14 @@ public class SignupViewModel extends ViewModel {
                 json.put("password", password);
                 JSONObject jsonObject = new JSONObject(new CreateUserUseCase().createUser(json).toString());
                 Log.d("5cos", jsonObject.toString());
+                JSONObject result = new JSONObject(jsonObject.get("result").toString());
+                creationStatus.setValue(
+                        new ApiDto(
+                                jsonObject.get("status").toString(),
+                                Integer.parseInt(jsonObject.get("code").toString()),
+                                result.get("message").toString()
+                        )
+                );
             } catch (JSONException | IOException e) {
                 throw new RuntimeException(e);
             }

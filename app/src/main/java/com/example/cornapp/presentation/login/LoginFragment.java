@@ -10,9 +10,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.example.cornapp.LoginActivity;
 import com.example.cornapp.MainActivity;
+import com.example.cornapp.R;
+import com.example.cornapp.SignUpActivity;
 import com.example.cornapp.databinding.ActivityMainBinding;
 import com.example.cornapp.databinding.FragmentLoginBinding;
 import com.example.cornapp.utils.PersistanceUtils;
@@ -51,6 +54,9 @@ public class LoginFragment extends Fragment {
                         binding.loginUserPassword.getText().toString()
                 );
             }
+        });
+        binding.createAccount.setOnClickListener(view -> {
+            startActivity(new Intent(getActivity(), SignUpActivity.class));
         });
     }
 

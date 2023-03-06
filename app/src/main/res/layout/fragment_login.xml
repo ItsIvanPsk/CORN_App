@@ -52,14 +52,31 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/login_user_email" />
 
-            <TextView
-                android:id="@+id/login_user_signup"
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/signup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No tens un compte? Crea't un ara."
+                android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/login_user_password"/>
+                app:layout_constraintTop_toBottomOf="@id/login_user_password">
+
+                <TextView
+                    android:id="@+id/login_user_signup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No tens un compte?"/>
+
+                <TextView
+                    android:id="@+id/create_account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:textColor="@color/cerulean"
+                    android:textStyle="bold"
+                    android:text="Crea't un ara."/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/login_user_login"
@@ -67,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:text="Inicia sessió"
                 android:textColor="@color/white"
-                app:layout_constraintTop_toBottomOf="@id/login_user_signup"
+                app:layout_constraintTop_toBottomOf="@id/signup"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginVertical="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
