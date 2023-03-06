@@ -9,17 +9,21 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.cornapp.data.models.ApiDto;
 import com.example.cornapp.data.models.UserBo;
-import com.example.cornapp.domain.GetSyncUserUseCase;
+import com.example.cornapp.domain.profile.GetSyncUserUseCase;
+import com.example.cornapp.domain.profile.GetUserDataByTokenUseCase;
 import com.example.cornapp.utils.JsonUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ProfileViewModel extends ViewModel {
 
     private MutableLiveData<ApiDto> syncUp = new MutableLiveData<>();
-    private MutableLiveData<UserBo> userJson = new MutableLiveData<>();
+    private MutableLiveData<UserBo> user = new MutableLiveData<>();
 
     public MutableLiveData<ApiDto> syncUser(){
         return syncUp;
@@ -46,37 +50,40 @@ public class ProfileViewModel extends ViewModel {
                             _json.getJSONObject("result").getString("message")
                     )
             );
-
-            ArrayList<String> dataList = new ArrayList<>();
-            dataList.add(_name);
-            dataList.add(_surname);
-            dataList.add(_phone);
-            dataList.add(_email);
-            JsonUtils.saveDataToFile(context, "users.json", dataList);
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
     }
 
-    public void readUser(Context context) {
-        ArrayList<String> retrievedDataList = JsonUtils.readDataFromFile(context, "users.json");
-        UserBo user = new UserBo();
-        Log.d("5cos", retrievedDataList.toString());
-        if (retrievedDataList.size() != 0) {
-            if (retrievedDataList.get(0).length() != 0) {
-                user.setName(retrievedDataList.get(0));
-                user.setSurname(retrievedDataList.get(1));
-                user.setPhone(Integer.parseInt(retrievedDataList.get(2)));
-                user.setEmail(retrievedDataList.get(3));
-                userJson.setValue(user);
+    public LiveData<UserBo> getUserData() {
+        return user;
+    }
+
+    public void getUserByToken(Context requireContext, String token) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("session_token", token);
+            StringBuffer sb = new GetUserDataByTokenUseCase().getUserData(json);
+            JSONObject apiResult = new JSONObject(sb.toString());
+            Log.d("5cos", apiResult.toString());
+            if (apiResult.get("code").toString().equals("200")) {
+                JSONObject inJson = new JSONObject(apiResult.get("result").toString());
+                JSONObject data = new JSONObject(inJson.get("data").toString());
+                Log.d("5cos", data.toString());
+                Log.d("5cos", data.get("email").toString());
+                user.setValue(
+                        new UserBo(
+                            data.get("name").toString(),
+                            data.get("surname").toString(),
+                            data.get("email").toString(),
+                            Integer.parseInt(data.get("phone").toString()),
+                                Integer.parseInt(data.get("balance").toString())
+                        )
+                );
             }
+        } catch (JSONException | IOException e) {
+            throw new RuntimeException(e);
         }
     }
-
-    public LiveData<UserBo> getReadedUser() {
-        return userJson;
-    }
-
 }

@@ -9,8 +9,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.cornapp.data.models.ApiDto;
 import com.example.cornapp.data.models.TransactionBo;
-import com.example.cornapp.domain.FinishPaymentUseCase;
-import com.example.cornapp.domain.StartPaymentUseCase;
+import com.example.cornapp.domain.scan.FinishPaymentUseCase;
+import com.example.cornapp.domain.scan.StartPaymentUseCase;
 import com.example.cornapp.utils.JsonUtils;
 
 import org.json.JSONException;
@@ -21,27 +21,35 @@ import java.util.ArrayList;
 public class ScanViewModel extends ViewModel {
 
     private final MutableLiveData<TransactionBo> transaction = new MutableLiveData<>();
+    public LiveData<TransactionBo> getTransactionInfo() {
+        return transaction;
+    }
+
     private final MutableLiveData<ApiDto> apiResult = new MutableLiveData<>();
 
-    public void startPayment(String token, Context context) {
+    public LiveData<ApiDto> getTransactionResult() {
+        return apiResult;
+    }
+
+
+    public void startPayment(String token, Context context, String session_token) {
         JSONObject json = new JSONObject();
-        ArrayList<String> userData = JsonUtils.readDataFromFile(context, "users.json");
-        Log.d("5cos", userData.get(2));
+
         try {
-            json.put("user_id", userData.get(2));
+            json.put("session_token", session_token);
             json.put("transaction_token", token);
-            StringBuffer str = new StartPaymentUseCase().startPayment(json);
-            JSONObject response = new JSONObject(str.toString());
+            StringBuffer api_result = new StartPaymentUseCase().startPayment(json);
+            JSONObject response = new JSONObject(api_result.toString());
             if (response.getString("status").equals("OK")){
                 JSONObject result = new JSONObject(response.getString("result"));
-                JSONObject res = new JSONObject(result.toString());
-                JSONObject res2 = new JSONObject(res.toString());
+                JSONObject data = new JSONObject(result.toString());
+                JSONObject jsonResult = new JSONObject(data.toString());
                 transaction.setValue(
                         new TransactionBo(
                                 result.getString("message"),
-                                userData.get(2),
+                                session_token,
                                 token,
-                                Integer.parseInt(res2.getString("amount"))
+                                Integer.parseInt(jsonResult.getString("amount"))
                         )
                 );
             } else if (response.getString("status").equals("ERROR")){
@@ -52,10 +60,10 @@ public class ScanViewModel extends ViewModel {
         }
     }
 
-    public void finishPayment(Boolean accept, TransactionBo transaction) {
+    public void finishPayment(Boolean accept, TransactionBo transaction, String session_token) {
         JSONObject json = new JSONObject();
         try {
-            json.put("user_id", transaction.getUserId());
+            json.put("session_token", session_token);
             json.put("transaction_token", transaction.getTransactionToken());
             json.put("accept", accept);
             json.put("amount", transaction.getAmount());
@@ -72,18 +80,6 @@ public class ScanViewModel extends ViewModel {
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public LiveData<TransactionBo> getTransactionInfo() {
-        return transaction;
-    }
-
-    public LiveData<ApiDto> getTransactionResult() {
-        return apiResult;
-    }
-
-    public void setTransactionResult(ApiDto transactionResult) {
-        this.apiResult.setValue(transactionResult);
     }
 
 }

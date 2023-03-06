@@ -10,11 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.cornapp.MainActivity;
 import com.example.cornapp.data.models.UserBo;
 import com.example.cornapp.databinding.FragmentProfileBinding;
 import com.example.cornapp.presentation.ApplicationViewModel;
 import com.example.cornapp.presentation.profile.ProfileViewModel;
 import com.example.cornapp.utils.JsonUtils;
+import com.example.cornapp.utils.PersistanceUtils;
 
 import java.util.ArrayList;
 
@@ -22,7 +24,6 @@ public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
     private ProfileViewModel viewModel;
-    private ApplicationViewModel appViewModel;
 
     private boolean userEditing = false;
     private boolean contactEditing = false;
@@ -31,11 +32,10 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
-        appViewModel = new ViewModelProvider(this).get(ApplicationViewModel.class);
-        viewModel.readUser(requireContext());
         setupProfileUI();
         setupListeners();
         setupObservers();
+        viewModel.getUserByToken(requireContext(), PersistanceUtils.session_token);
         return binding.getRoot();
     }
 
@@ -79,7 +79,7 @@ public class ProfileFragment extends Fragment {
             AlertDialog alertDialog = showDialog(apiDto.getCode(), apiDto.getStatus(), apiDto.getResult());
             alertDialog.show();
         });
-        viewModel.getReadedUser().observe(getViewLifecycleOwner(), UserBo -> {
+        viewModel.getUserData().observe(getViewLifecycleOwner(), UserBo -> {
             binding.profileUserNameValue.setText(UserBo.getName());
             binding.profileUserSurnameValue.setText(UserBo.getSurname());
             binding.profileContactTelfValue.setText(String.valueOf(UserBo.getPhone()));
@@ -111,7 +111,5 @@ public class ProfileFragment extends Fragment {
                 return builder.create();
             }
         }
-
     }
-
 }

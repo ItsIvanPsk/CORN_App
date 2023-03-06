@@ -1,6 +1,8 @@
 package com.example.cornapp;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -19,12 +21,13 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
 
+    static String userToken;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         setupNavController();
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
@@ -48,4 +51,11 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
     }
 
+    public String getUserToken() {
+        return userToken;
+    }
+
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
+    }
 }

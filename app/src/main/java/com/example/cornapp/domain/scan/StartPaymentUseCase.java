@@ -1,4 +1,4 @@
-package com.example.cornapp.domain;
+package com.example.cornapp.domain.scan;
 
 import com.example.cornapp.data.ApiWs;
 import com.example.cornapp.utils.WebServiceConstants;

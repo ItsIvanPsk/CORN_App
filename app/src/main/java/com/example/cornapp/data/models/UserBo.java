@@ -2,13 +2,14 @@ package com.example.cornapp.data.models;
 
 public class UserBo {
     private String name, surname, email;
-    private int phone;
+    private int phone, balance;
 
-    public UserBo(String _name, String _surname, String _email, int _phone){
+    public UserBo(String _name, String _surname, String _email, int _phone, int _balance){
         this.name = _name;
         this.surname = _surname;
         this.email = _email;
         this.phone = _phone;
+        this.balance = _balance;
     }
 
     public UserBo(){  }

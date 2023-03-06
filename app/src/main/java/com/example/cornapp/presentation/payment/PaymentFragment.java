@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.cornapp.MainActivity;
 import com.example.cornapp.databinding.FragmentPaymentBinding;
 import com.example.cornapp.utils.JsonUtils;
 import com.google.zxing.BarcodeFormat;
@@ -28,6 +29,8 @@ public class PaymentFragment extends Fragment {
 
     private FragmentPaymentBinding binding;
     private PaymentViewModel viewModel;
+    private final MainActivity activity = (MainActivity) getActivity();
+
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentPaymentBinding.inflate(inflater, container, false);
@@ -39,18 +42,10 @@ public class PaymentFragment extends Fragment {
 
     public void setupListeners(){
         binding.paymentSetupPayment.setOnClickListener(view -> {
-            ArrayList<String> userData = JsonUtils.readDataFromFile(requireContext(), "users.json");
             if (binding.paymentAmountValue.getText().toString().equals("")){
                 showDialog(
                         "Invalid amount",
                         "You have entered a incorrect value on the amount field.\nPlease try again.",
-                        "Okay",
-                        ""
-                );
-            } else if (userData.get(2) == null || Objects.equals(userData.get(2), "")) {
-                showDialog(
-                        "Invalid amount",
-                        "You do not have a user on the app, please go to the profile and sign up.\nPlease try again.",
                         "Okay",
                         ""
                 );
@@ -105,7 +100,7 @@ public class PaymentFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(title);
         builder.setMessage(message);
-        builder.setPositiveButton(firstOpt, (dialog, id) -> viewModel.setupPayment(binding.paymentAmountValue.getText().toString(), requireContext()));
+        builder.setPositiveButton(firstOpt, (dialog, id) -> viewModel.setupPayment(binding.paymentAmountValue.getText().toString(), requireContext(), activity.getUserToken()));
         builder.setNegativeButton(secondOpt, (dialog, id) -> {
             dialog.dismiss();
             Toast.makeText(requireContext(), "Se ha cancelado el pago", Toast.LENGTH_SHORT).show();

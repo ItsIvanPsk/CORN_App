@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.DecodeCallback;
+import com.example.cornapp.MainActivity;
 import com.example.cornapp.data.models.ApiDto;
 import com.example.cornapp.data.models.TransactionBo;
 import com.example.cornapp.databinding.FragmentScanBinding;
@@ -35,6 +36,7 @@ public class ScanFragment extends Fragment {
     private static final int CAMERA_REQUEST_CODE = 10;
     private FragmentScanBinding binding;
     private ScanViewModel viewModel;
+    private final MainActivity activity = (MainActivity) getActivity();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,18 +70,7 @@ public class ScanFragment extends Fragment {
         if (hasCameraPermission()) {
             mCodeScanner.setDecodeCallback(result -> getActivity().runOnUiThread(
                     () -> {
-                        Toast.makeText(getActivity(), result.getText(), Toast.LENGTH_SHORT).show();
-                        ArrayList<String> userData = JsonUtils.readDataFromFile(requireContext(), "users.json");
-                        if (userData.size() == 0) {
-                            showDialog(
-                                    "Payment error",
-                                    "You do not have a user. Payment stopped!",
-                                    "Okay",
-                                    ""
-                            );
-                        } else {
-                            viewModel.startPayment(result.getText(), requireContext());
-                        }
+                        viewModel.startPayment(result.getText(), requireContext(), activity != null ? activity.getUserToken() : null);
                     }
             ));
             binding.scannerView.setOnClickListener(view -> mCodeScanner.startPreview());
@@ -111,10 +102,10 @@ public class ScanFragment extends Fragment {
                     Log.d("5cos", String.valueOf(transaction.getAmount()));
                     Log.d("5cos", String.valueOf(transaction.getUserId()));
                     Log.d("5cos", String.valueOf(transaction.getMessage()));
-                    viewModel.finishPayment(true, transaction);
+                    viewModel.finishPayment(true, transaction, activity.getUserToken());
                 });
                 builder.setNegativeButton("Cancel", (dialog, id) -> {
-                    viewModel.finishPayment(false, transaction);
+                    viewModel.finishPayment(false, transaction, activity.getUserToken());
                 });
                 AlertDialog dialog = builder.create();
                 dialog.show();
