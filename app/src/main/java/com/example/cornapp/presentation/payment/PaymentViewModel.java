@@ -26,10 +26,16 @@ public class PaymentViewModel extends ViewModel {
             json.put("amount", amount);
             StringBuffer api_result = new SetupPaymentUseCase().setupPayment(json);
             JSONObject response = new JSONObject(api_result.toString());
-            JSONObject result = response.getJSONObject("result");
-            qrToken.setValue(
-                    result.getString("transaction_token")
-            );
+            if (response.getString("code").equals("200")) {
+                JSONObject result = response.getJSONObject("result");
+                Log.d("5cos", result.toString());
+                qrToken.setValue(
+                        result.getString("transaction_token")
+                );
+            }else {
+                Log.d("5cos", response.getString("code"));
+            }
+
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }

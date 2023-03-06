@@ -33,15 +33,16 @@ public class ScanViewModel extends ViewModel {
 
 
     public void startPayment(String token, Context context, String session_token) {
-        JSONObject json = new JSONObject();
-
         try {
+            JSONObject json = new JSONObject();
             json.put("session_token", session_token);
             json.put("transaction_token", token);
             StringBuffer api_result = new StartPaymentUseCase().startPayment(json);
             JSONObject response = new JSONObject(api_result.toString());
+            Log.d("5cos", "START_PAYMENT: " + response.toString());
             if (response.getString("status").equals("OK")){
                 JSONObject result = new JSONObject(response.getString("result"));
+                Log.d("5cos", "START_PAYMENT: " + result.toString());
                 JSONObject data = new JSONObject(result.toString());
                 JSONObject jsonResult = new JSONObject(data.toString());
                 transaction.setValue(
@@ -68,7 +69,9 @@ public class ScanViewModel extends ViewModel {
             json.put("accept", accept);
             json.put("amount", transaction.getAmount());
             StringBuffer str = new FinishPaymentUseCase().finishPayment(json);
+            Log.d("5cos", "FINISH_PAYMENT: " + str.toString());
             JSONObject res = new JSONObject(str.toString());
+            Log.d("5cos", "FINISH_PAYMENT: " + res.toString());
             apiResult.setValue(
                     new ApiDto(
                             res.getString("status"),

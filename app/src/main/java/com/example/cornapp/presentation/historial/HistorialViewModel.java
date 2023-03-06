@@ -1,6 +1,7 @@
 package com.example.cornapp.presentation.historial;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -32,8 +33,8 @@ public class HistorialViewModel extends ViewModel {
         ArrayList<UserTransactionBo> auxTransactions = new ArrayList<>();
         try {
             json.put("session_token", session_token);
-            StringBuffer sb = null;
-            sb = new GetTransactionsUseCase().getTransactions(json);
+            StringBuffer sb = new GetTransactionsUseCase().getTransactions(json);
+            Log.d("5cos", sb.toString());
             JSONObject result = new JSONObject(sb.toString());
             JSONObject objResponse = new JSONObject(result.toString());
             JSONObject objResult = objResponse.getJSONObject("result");

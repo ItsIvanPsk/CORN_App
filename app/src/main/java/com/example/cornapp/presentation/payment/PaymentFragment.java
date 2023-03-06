@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.cornapp.MainActivity;
 import com.example.cornapp.databinding.FragmentPaymentBinding;
 import com.example.cornapp.utils.JsonUtils;
+import com.example.cornapp.utils.PersistanceUtils;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -100,7 +101,7 @@ public class PaymentFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(title);
         builder.setMessage(message);
-        builder.setPositiveButton(firstOpt, (dialog, id) -> viewModel.setupPayment(binding.paymentAmountValue.getText().toString(), requireContext(), activity.getUserToken()));
+        builder.setPositiveButton(firstOpt, (dialog, id) -> viewModel.setupPayment(binding.paymentAmountValue.getText().toString(), requireContext(), PersistanceUtils.session_token));
         builder.setNegativeButton(secondOpt, (dialog, id) -> {
             dialog.dismiss();
             Toast.makeText(requireContext(), "Se ha cancelado el pago", Toast.LENGTH_SHORT).show();

@@ -25,6 +25,7 @@ import com.example.cornapp.data.models.ApiDto;
 import com.example.cornapp.data.models.TransactionBo;
 import com.example.cornapp.databinding.FragmentScanBinding;
 import com.example.cornapp.utils.JsonUtils;
+import com.example.cornapp.utils.PersistanceUtils;
 import com.google.zxing.Result;
 
 import java.util.ArrayList;
@@ -70,7 +71,7 @@ public class ScanFragment extends Fragment {
         if (hasCameraPermission()) {
             mCodeScanner.setDecodeCallback(result -> getActivity().runOnUiThread(
                     () -> {
-                        viewModel.startPayment(result.getText(), requireContext(), activity != null ? activity.getUserToken() : null);
+                        viewModel.startPayment(result.getText(), requireContext(), PersistanceUtils.session_token );
                     }
             ));
             binding.scannerView.setOnClickListener(view -> mCodeScanner.startPreview());
@@ -102,10 +103,10 @@ public class ScanFragment extends Fragment {
                     Log.d("5cos", String.valueOf(transaction.getAmount()));
                     Log.d("5cos", String.valueOf(transaction.getUserId()));
                     Log.d("5cos", String.valueOf(transaction.getMessage()));
-                    viewModel.finishPayment(true, transaction, activity.getUserToken());
+                    viewModel.finishPayment(true, transaction, PersistanceUtils.session_token);
                 });
                 builder.setNegativeButton("Cancel", (dialog, id) -> {
-                    viewModel.finishPayment(false, transaction, activity.getUserToken());
+                    viewModel.finishPayment(false, transaction, PersistanceUtils.session_token);
                 });
                 AlertDialog dialog = builder.create();
                 dialog.show();

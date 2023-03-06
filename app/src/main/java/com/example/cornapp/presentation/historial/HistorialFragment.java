@@ -17,6 +17,7 @@ import com.example.cornapp.data.models.TransactionBo;
 import com.example.cornapp.data.models.UserTransactionBo;
 import com.example.cornapp.databinding.FragmentHistorialBinding;
 import com.example.cornapp.presentation.scan.ScanViewModel;
+import com.example.cornapp.utils.PersistanceUtils;
 
 import java.util.ArrayList;
 
@@ -35,9 +36,7 @@ public class HistorialFragment extends Fragment {
         setupListeners();
         setupObservers();
 
-
-
-        viewModel.updateUserTransactions(requireContext(), "1q2w3e4r5t6y7u8i9o");
+        viewModel.updateUserTransactions(requireContext(), PersistanceUtils.session_token);
 
         return binding.getRoot();
     }
