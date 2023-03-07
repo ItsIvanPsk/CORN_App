@@ -48,6 +48,7 @@
                 android:layout_marginHorizontal="40dp"
                 android:hint="Contrasenya"
                 android:text="password1"
+                android:inputType="textPassword"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/login_user_email" />

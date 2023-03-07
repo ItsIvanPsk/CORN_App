@@ -60,7 +60,7 @@ public class ProfileViewModel extends ViewModel {
         return user;
     }
 
-    public void getUserByToken(Context requireContext, String token) {
+    public void getUserByToken(Context context, String token) {
         JSONObject json = new JSONObject();
         try {
             json.put("session_token", token);

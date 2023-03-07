@@ -69,9 +69,6 @@ public class ProfileFragment extends Fragment {
                     getContext()
             );
         });
-        binding.profileUserLogout.setOnClickListener(view -> {
-            JsonUtils.saveDataToFile(requireContext(), "users.json", new ArrayList<>());
-        });
     }
 
     public void setupObservers() {
