@@ -39,6 +39,7 @@ public class LoginFragment extends Fragment {
 
         SharedPreferences sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE);
         String st = sharedPref.getString("session_token", "");
+        binding.loginProgressBar.setVisibility(View.GONE);
         viewModel.tryAutoLogin(st);
         Log.d("5cos", st);
 
@@ -55,6 +56,7 @@ public class LoginFragment extends Fragment {
             } else if (binding.loginUserPassword.getText().toString().equals("")) {
                 showDialog("Inici de sessió", "La contraseña que has introduït está buida.", "Okay", "");
             } else {
+                binding.loginProgressBar.setVisibility(View.VISIBLE);
                 viewModel.loginUser(
                         binding.loginUserEmail.getText().toString(),
                         binding.loginUserPassword.getText().toString()
@@ -70,8 +72,8 @@ public class LoginFragment extends Fragment {
         viewModel.getLoginResult().observe(getViewLifecycleOwner(), result -> {
             if (result.getCode() == 200) {
                 try {
-                    JSONObject json = new JSONObject(result.getResult().toString());
-                    Log.d("5cos", "O: " + json.get("session_token").toString());
+                    JSONObject json = new JSONObject(result.getResult());
+                    Log.d("5cos", "O: " + json.get("session_token"));
                     PersistanceUtils.session_token = json.get("session_token").toString();
                     SharedPreferences sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPref.edit();
@@ -79,10 +81,15 @@ public class LoginFragment extends Fragment {
                     editor.putString("session_token", json.get("session_token").toString());
                     editor.apply();
                     Toast.makeText(requireContext(), "Auto login succesfull!", Toast.LENGTH_SHORT).show();
+                    binding.loginProgressBar.setVisibility(View.VISIBLE);
                     startActivity(new Intent(getActivity(), MainActivity.class));
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
+            } else {
+                binding.loginProgressBar.setVisibility(View.GONE);
+                Toast.makeText(requireContext(), "Error, no s'ha pogut iniciar sessió!", Toast.LENGTH_SHORT).show();
+                binding.loginUserPassword.setText("");
             }
         });
     }
