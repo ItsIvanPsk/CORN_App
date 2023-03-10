@@ -36,10 +36,12 @@ public class LoginFragment extends Fragment {
 
         setupListeners();
         setupObservers();
+        //startActivity(new Intent(getActivity(), MainActivity.class));
 
         SharedPreferences sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE);
         String st = sharedPref.getString("session_token", "");
         binding.loginProgressBar.setVisibility(View.GONE);
+        Log.d("5cos", st.toString());
         viewModel.tryAutoLogin(st);
         Log.d("5cos", st);
 
@@ -72,24 +74,35 @@ public class LoginFragment extends Fragment {
         viewModel.getLoginResult().observe(getViewLifecycleOwner(), result -> {
             if (result.getCode() == 200) {
                 try {
-                    JSONObject json = new JSONObject(result.getResult());
-                    Log.d("5cos", "O: " + json.get("session_token"));
-                    PersistanceUtils.session_token = json.get("session_token").toString();
+                    JSONObject jsonResult = new JSONObject(result.getResult().toString());
+                    String key = (String) jsonResult.get("session_token");
+                    PersistanceUtils.session_token = result.getResult();
                     SharedPreferences sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.remove("session_token");
-                    editor.putString("session_token", json.get("session_token").toString());
+                    editor.putString("session_token", key);
                     editor.apply();
-                    Toast.makeText(requireContext(), "Auto login succesfull!", Toast.LENGTH_SHORT).show();
-                    binding.loginProgressBar.setVisibility(View.VISIBLE);
                     startActivity(new Intent(getActivity(), MainActivity.class));
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
+            }
+        });
+        viewModel.getAutoLoginResult().observe(getViewLifecycleOwner(), result -> {
+            if (result.getCode() == 200) {
+                Log.d("5cos", "AAUTOS: " + result.getResult());
+                Log.d("5cos", "RESULT_AUTO: " + result.getResult());
+                PersistanceUtils.session_token = result.getResult();
+                SharedPreferences sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.remove("session_token");
+                Log.d("5cos", "PUSTRING_AUTO -> " + result.getResult());
+                editor.putString("session_token", result.getResult());
+                editor.apply();
+                Toast.makeText(requireContext(), "Auto login succesfull!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getActivity(), MainActivity.class));
             } else {
-                binding.loginProgressBar.setVisibility(View.GONE);
-                Toast.makeText(requireContext(), "Error, no s'ha pogut iniciar sessió!", Toast.LENGTH_SHORT).show();
-                binding.loginUserPassword.setText("");
+                Log.d("5cos", "No se ha podido iniciar sesión");
             }
         });
     }

@@ -33,8 +33,10 @@ public class HistorialViewModel extends ViewModel {
         ArrayList<UserTransactionBo> auxTransactions = new ArrayList<>();
         try {
             json.put("session_token", session_token);
+            Log.d("5cos", json.toString());
             StringBuffer sb = new GetTransactionsUseCase().getTransactions(json);
             Log.d("5cos", sb.toString());
+
             JSONObject result = new JSONObject(sb.toString());
             JSONObject objResponse = new JSONObject(result.toString());
             JSONObject objResult = objResponse.getJSONObject("result");
@@ -45,13 +47,13 @@ public class HistorialViewModel extends ViewModel {
                 auxTransactions.add(
                         new UserTransactionBo(
                                 innerTransaction.get("originName").toString(),
-                                innerTransaction.get("originName").toString(),
-                                innerTransaction.get("originName").toString(),
-                                innerTransaction.get("originName").toString(),
-                                Integer.parseInt(innerTransaction.get("originName").toString()),
-                                Integer.parseInt(innerTransaction.get("originName").toString()),
-                                Integer.parseInt(innerTransaction.get("originName").toString()),
-                                Integer.parseInt(innerTransaction.get("originName").toString())
+                                innerTransaction.get("destinationName").toString(),
+                                innerTransaction.get("timeSetup").toString(),
+                                innerTransaction.get("timeAccepted").toString(),
+                                Integer.parseInt(innerTransaction.get("origin").toString()),
+                                Integer.parseInt(innerTransaction.get("destination").toString()),
+                                Integer.parseInt(innerTransaction.get("amount").toString()),
+                                Integer.parseInt(innerTransaction.get("accepted").toString())
                         )
                 );
             }

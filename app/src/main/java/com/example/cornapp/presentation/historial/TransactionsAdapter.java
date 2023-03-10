@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapter.ViewHolder> {
 
-    private ArrayList<UserTransactionBo> transactionBos;
+    private ArrayList<UserTransactionBo> transactionBos = new ArrayList<>();
     private LayoutInflater mInflater;
 
     TransactionsAdapter(Context context, ArrayList<UserTransactionBo> _records) {

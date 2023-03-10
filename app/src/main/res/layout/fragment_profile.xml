@@ -30,17 +30,15 @@
             android:layout_height="240dp">
 
             <ImageView
-                android:id="@+id/profile_user_logout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/profile_status"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_margin="10dp"
-                android:src="@drawable/baseline_logout_24"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
+                android:contentDescription="UserIcon"
+                android:src="@drawable/round_fiber_manual_record_24"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.046" />
+                app:layout_constraintVertical_bias="0.0"/>
 
             <ImageView
                 android:id="@+id/profile_user_icon"
@@ -249,12 +247,38 @@
     </androidx.cardview.widget.CardView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_logout_24"
+        android:tint="@android:color/white"
+        android:backgroundTint="@color/cerulean"
+        android:layout_marginBottom="5dp"
+        android:visibility="invisible"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintBottom_toTopOf="@id/fab_refresh"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:src="@drawable/baseline_refresh_24"
+        android:tint="@android:color/white"
+        android:backgroundTint="@color/cerulean"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintBottom_toTopOf="@id/fab"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="p"
-        android:src="@drawable/baseline_refresh_24_white"
-        android:layout_marginBottom="75dp"
+        android:src="@drawable/round_settings_24"
+        android:backgroundTint="@color/cerulean"
+        android:layout_marginBottom="60dp"
         android:layout_marginEnd="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

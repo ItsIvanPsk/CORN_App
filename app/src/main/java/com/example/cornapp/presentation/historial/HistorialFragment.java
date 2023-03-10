@@ -1,7 +1,5 @@
 package com.example.cornapp.presentation.historial;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,18 +8,11 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.cornapp.MainActivity;
-import com.example.cornapp.data.models.TransactionBo;
-import com.example.cornapp.data.models.UserTransactionBo;
 import com.example.cornapp.databinding.FragmentHistorialBinding;
-import com.example.cornapp.presentation.scan.ScanViewModel;
 import com.example.cornapp.utils.PersistanceUtils;
-
-import java.util.ArrayList;
 
 public class HistorialFragment extends Fragment {
 
@@ -37,10 +28,9 @@ public class HistorialFragment extends Fragment {
         setupAdapter();
         setupListeners();
         setupObservers();
-
-        SharedPreferences sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE);
-        String st = sharedPref.getString("session_token", "");
-        viewModel.updateUserTransactions(requireContext(), st);
+        binding.historialProgress.setVisibility(View.VISIBLE);
+        Log.d("5cos", PersistanceUtils.session_token);
+        viewModel.updateUserTransactions(requireContext(), PersistanceUtils.session_token);
 
         return binding.getRoot();
     }
@@ -57,8 +47,12 @@ public class HistorialFragment extends Fragment {
     private void setupObservers() {
         viewModel.getUserTransactions().observe(getViewLifecycleOwner(), transaction -> {
             Log.d("5cos", transaction.toString());
-            adapter = new TransactionsAdapter(requireContext(), transaction);
-            binding.historialRecycler.setAdapter(adapter);
+            if (!transaction.isEmpty()) {
+                adapter = new TransactionsAdapter(requireContext(), transaction);
+                binding.historialRecycler.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+                binding.historialProgress.setVisibility(View.GONE);
+            }
         });
     }
 

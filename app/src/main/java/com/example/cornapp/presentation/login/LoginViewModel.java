@@ -18,15 +18,19 @@ import java.io.IOException;
 public class LoginViewModel extends ViewModel {
 
     private final MutableLiveData<String> errMsg = new MutableLiveData<>();
-    private final MutableLiveData<ApiDto> apiWs = new MutableLiveData<>();
+    private final MutableLiveData<ApiDto> login = new MutableLiveData<>();
+    private final MutableLiveData<ApiDto> autoLogin = new MutableLiveData<>();
 
     public LiveData<String> getLoginInfo() {
         return errMsg;
     }
-
     public LiveData<ApiDto> getLoginResult() {
-        return apiWs;
+        return login;
     }
+    public LiveData<ApiDto> getAutoLoginResult() {
+        return autoLogin;
+    }
+
 
     public void loginUser(String email, String password) {
         if (email.equals("")) {
@@ -40,11 +44,8 @@ public class LoginViewModel extends ViewModel {
                 JSONObject userJson = new JSONObject();
                 userJson.put("email", email);
                 userJson.put("password", password);
-                Log.d("5cos", new LoginUserUseCase().loginUser(userJson).toString());
                 JSONObject response = new JSONObject(String.valueOf(new LoginUserUseCase().loginUser(userJson)));
-                Log.d("5cos", "RESPONSE: " + response);
-
-                apiWs.setValue(new ApiDto(
+                login.setValue(new ApiDto(
                         response.getString("status"),
                         Integer.parseInt(response.getString("code")),
                         response.getString("result")
@@ -64,17 +65,16 @@ public class LoginViewModel extends ViewModel {
                 if (response.get("code").equals("200")) {
                     JSONObject data = new JSONObject(response.get("result").toString());
                     JSONObject userData = new JSONObject(data.get("data").toString());
-                    Log.d("5cos", "USERDATA -> " + userData);
                     if (userData.get("name").toString().equals("")) {
-                        apiWs.setValue(
+                        autoLogin.setValue(
                                 new ApiDto(
                                         "Error",
                                         500,
-                                        "The auto login failed."
+                                        "El login automatic ha fallat."
                                 )
                         );
                     } else {
-                        apiWs.setValue(
+                        autoLogin.setValue(
                                 new ApiDto(
                                         "Login",
                                         200,
@@ -82,6 +82,23 @@ public class LoginViewModel extends ViewModel {
                                 )
                         );
                     }
+                } else if (response.get("code").equals("404")) {
+                    autoLogin.setValue(
+                            new ApiDto(
+                                    "Login",
+                                    Integer.parseInt(response.get("code").toString()),
+                                    "Error, no s'ha pogut logar automaticament"
+                            )
+                    );
+                } else if (response.get("code").equals("500")) {
+                    Log.d("5cos", "Error!");
+                    autoLogin.setValue(
+                            new ApiDto(
+                                    "Login",
+                                    Integer.parseInt(response.get("code").toString()),
+                                    "Error, el servidor no ha pogut procesar la teva petició."
+                            )
+                    );
                 }
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
