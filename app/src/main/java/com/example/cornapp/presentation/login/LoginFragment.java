@@ -74,14 +74,16 @@ public class LoginFragment extends Fragment {
         viewModel.getLoginResult().observe(getViewLifecycleOwner(), result -> {
             if (result.getCode() == 200) {
                 try {
-                    JSONObject jsonResult = new JSONObject(result.getResult().toString());
-                    String key = (String) jsonResult.get("session_token");
+                    Log.d("5cos", "MANUAL_LOGIN -> " + result.getResult());
+                    JSONObject jsonResult = new JSONObject(result.getResult());
+                    String key = jsonResult.get("session_token").toString();
                     PersistanceUtils.session_token = result.getResult();
                     SharedPreferences sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.remove("session_token");
                     editor.putString("session_token", key);
                     editor.apply();
+                    Log.d("5cos", "Shared token -> " + PersistanceUtils.session_token);
                     startActivity(new Intent(getActivity(), MainActivity.class));
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
@@ -100,6 +102,7 @@ public class LoginFragment extends Fragment {
                 editor.putString("session_token", result.getResult());
                 editor.apply();
                 Toast.makeText(requireContext(), "Auto login succesfull!", Toast.LENGTH_SHORT).show();
+                Log.d("5cos", "Shared token -> " + PersistanceUtils.session_token);
                 startActivity(new Intent(getActivity(), MainActivity.class));
             } else {
                 Log.d("5cos", "No se ha podido iniciar sesión");

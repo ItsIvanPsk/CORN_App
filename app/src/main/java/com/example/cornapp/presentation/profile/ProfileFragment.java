@@ -101,7 +101,7 @@ public class ProfileFragment extends Fragment {
             alertDialog.show();
         });
         viewModel.getLogoutState().observe(getViewLifecycleOwner(), apiDto -> {
-            AlertDialog alertDialog = showDialog(apiDto.getCode(), apiDto.getResult());
+            AlertDialog alertDialog = showDialogLogout(apiDto.getCode(), apiDto.getResult(), "L'usuari s'ha desloguejat correctament");
             alertDialog.show();
         });
         viewModel.getUserData().observe(getViewLifecycleOwner(), UserBo -> {
