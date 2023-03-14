@@ -30,6 +30,7 @@ public class HistorialFragment extends Fragment {
         setupObservers();
         binding.historialProgress.setVisibility(View.VISIBLE);
         Log.d("5cos", PersistanceUtils.session_token);
+        binding.historialSaldo.setText("SALDO:  " + PersistanceUtils.saldo);
         viewModel.updateUserTransactions(requireContext(), PersistanceUtils.session_token);
 
         return binding.getRoot();
@@ -48,7 +49,7 @@ public class HistorialFragment extends Fragment {
         viewModel.getUserTransactions().observe(getViewLifecycleOwner(), transaction -> {
             Log.d("5cos", transaction.toString());
             if (!transaction.isEmpty()) {
-                adapter = new TransactionsAdapter(requireContext(), transaction);
+                adapter = new TransactionsAdapter(requireContext(), transaction, 1);
                 binding.historialRecycler.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
                 binding.historialProgress.setVisibility(View.GONE);

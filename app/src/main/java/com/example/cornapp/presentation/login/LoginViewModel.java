@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.cornapp.data.models.ApiDto;
 import com.example.cornapp.domain.login.LoginUserUseCase;
 import com.example.cornapp.domain.profile.GetUserDataByTokenUseCase;
+import com.example.cornapp.utils.PersistanceUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,6 +46,7 @@ public class LoginViewModel extends ViewModel {
                 userJson.put("email", email);
                 userJson.put("password", password);
                 JSONObject response = new JSONObject(String.valueOf(new LoginUserUseCase().loginUser(userJson)));
+                Log.d("5cos", "RESPONSE: " + response.toString());
                 login.setValue(new ApiDto(
                         response.getString("status"),
                         Integer.parseInt(response.getString("code")),

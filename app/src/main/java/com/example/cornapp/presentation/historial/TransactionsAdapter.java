@@ -1,5 +1,6 @@
 package com.example.cornapp.presentation.historial;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,15 +12,18 @@ import com.example.cornapp.R;
 import com.example.cornapp.data.models.UserTransactionBo;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapter.ViewHolder> {
 
     private ArrayList<UserTransactionBo> transactionBos = new ArrayList<>();
+    private int user_id;
     private LayoutInflater mInflater;
 
-    TransactionsAdapter(Context context, ArrayList<UserTransactionBo> _records) {
+    TransactionsAdapter(Context context, ArrayList<UserTransactionBo> _records, int user_id) {
         this.mInflater = LayoutInflater.from(context);
         this.transactionBos = _records;
+        this.user_id = user_id;
     }
 
     TransactionsAdapter() {
@@ -33,16 +37,31 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
         return new ViewHolder(view);
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String name = transactionBos.get(position).getOriginName();
-        String id = transactionBos.get(position).getOriginName();
-        String amount = String.valueOf(transactionBos.get(position).getAmount());
-        String date = transactionBos.get(position).getTimeAccepted();
-        holder.name.setText(name);
-        holder.id.setText(id);
-        holder.amount.setText(amount);
-        holder.date.setText(date);
+        if (transactionBos.get(position).getOrigin() == user_id) {
+            String name = transactionBos.get(position).getDestinationName();
+            String id = String.valueOf(transactionBos.get(position).getDestination());
+            String amount = "-" + String.valueOf(transactionBos.get(position).getAmount());
+            String date = transactionBos.get(position).getTimeAccepted();
+            holder.name.setText(name);
+            holder.id.setText(id);
+            holder.amount.setText(amount);
+            holder.date.setText(date);
+            holder.amount.setTextColor(R.color.green);
+        } else {
+            String name = transactionBos.get(position).getOriginName();
+            String id = String.valueOf(transactionBos.get(position).getOrigin());
+            String amount = "+" + String.valueOf(transactionBos.get(position).getAmount());
+            String date = transactionBos.get(position).getTimeAccepted();
+            holder.name.setText(name);
+            holder.id.setText(id);
+            holder.amount.setText(amount);
+            holder.date.setText(date);
+            holder.amount.setTextColor(R.color.app_red);
+        }
+
     }
 
     @Override

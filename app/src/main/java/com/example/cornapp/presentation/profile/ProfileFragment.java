@@ -111,16 +111,16 @@ public class ProfileFragment extends Fragment {
             binding.profileEmailEditValue.setText(UserBo.getEmail());
             switch (UserBo.getStatus()) {
                 case "ACCEPTAT":
-                    binding.profileStatus.setColorFilter(R.color.app_green);
+                    binding.profileStatus.setImageResource(R.drawable.round_green);
                     break;
                 case "REFUSAT":
-                    binding.profileStatus.setColorFilter(R.color.app_red);
+                    binding.profileStatus.setColorFilter(R.drawable.round_red);
                     break;
-                case "NO_VERFICAT":
-                    binding.profileStatus.setColorFilter(R.color.colorPrimaryDark);
+                case "PER_VERIFICAR":
+                    binding.profileStatus.setColorFilter(R.drawable.round_orange);
                     break;
                 default:
-                    binding.profileStatus.setColorFilter(R.color.dusty_orange);
+                    binding.profileStatus.setColorFilter(R.drawable.round_blue);
                     break;
             }
         });

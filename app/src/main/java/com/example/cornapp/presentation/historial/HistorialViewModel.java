@@ -32,7 +32,7 @@ public class HistorialViewModel extends ViewModel {
         JSONObject json = new JSONObject();
         ArrayList<UserTransactionBo> auxTransactions = new ArrayList<>();
         try {
-            json.put("session_token", session_token);
+            json.put("user_id", "1");
             Log.d("5cos", json.toString());
             StringBuffer sb = new GetTransactionsUseCase().getTransactions(json);
             Log.d("5cos", sb.toString());
@@ -44,18 +44,33 @@ public class HistorialViewModel extends ViewModel {
 
             for (int transactionId = 0; transactionId < transactions.length(); transactionId++) {
                 JSONObject innerTransaction = new JSONObject(transactions.get(transactionId).toString());
-                auxTransactions.add(
-                        new UserTransactionBo(
-                                innerTransaction.get("originName").toString(),
-                                innerTransaction.get("destinationName").toString(),
-                                innerTransaction.get("timeSetup").toString(),
-                                innerTransaction.get("timeAccepted").toString(),
-                                Integer.parseInt(innerTransaction.get("origin").toString()),
-                                Integer.parseInt(innerTransaction.get("destination").toString()),
-                                Integer.parseInt(innerTransaction.get("amount").toString()),
-                                Integer.parseInt(innerTransaction.get("accepted").toString())
-                        )
-                );
+                if (innerTransaction.get("accepted").toString().equals("null")) {
+                    auxTransactions.add(
+                            new UserTransactionBo(
+                                    innerTransaction.get("originName").toString(),
+                                    innerTransaction.get("destinationName").toString(),
+                                    innerTransaction.get("timeSetup").toString(),
+                                    innerTransaction.get("timeAccepted").toString(),
+                                    Integer.parseInt(innerTransaction.get("origin").toString()),
+                                    Integer.parseInt(innerTransaction.get("destination").toString()),
+                                    Integer.parseInt(innerTransaction.get("amount").toString()),
+                                    0
+                            )
+                    );
+                } else {
+                    auxTransactions.add(
+                            new UserTransactionBo(
+                                    innerTransaction.get("originName").toString(),
+                                    innerTransaction.get("destinationName").toString(),
+                                    innerTransaction.get("timeSetup").toString(),
+                                    innerTransaction.get("timeAccepted").toString(),
+                                    Integer.parseInt(innerTransaction.get("origin").toString()),
+                                    Integer.parseInt(innerTransaction.get("destination").toString()),
+                                    Integer.parseInt(innerTransaction.get("amount").toString()),
+                                    Integer.parseInt(innerTransaction.get("accepted").toString())
+                            )
+                    );
+                }
             }
             userTransactionList.setValue(auxTransactions);
 

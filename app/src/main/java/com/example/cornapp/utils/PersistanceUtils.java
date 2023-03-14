@@ -10,4 +10,6 @@ public class PersistanceUtils {
 
     public static String session_token = "";
 
+    public static int saldo = 15;
+
 }
